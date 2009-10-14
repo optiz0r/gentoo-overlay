@@ -1,0 +1,36 @@
+--- configure.pl.orig	2009-09-29 01:52:58.000000000 +0300
++++ configure.pl	2009-09-29 20:41:18.000000000 +0300
+@@ -1,4 +1,4 @@
+-#!/bin/perl
++#!/usr/bin/perl
+ #============================================================= -*-perl-*-
+ #
+ # configure.pl: Configuration and installation program for BackupPC
+@@ -157,7 +157,7 @@
+ # config file to get all the defaults.
+ #
+ my $ConfigPath = "";
+-my $ConfigFileOK = 1;
++my $ConfigFileOK = 0;
+ while ( 1 ) {
+     if ( $ConfigFileOK && -f "/etc/BackupPC/config.pl" ) {
+         $ConfigPath = "/etc/BackupPC/config.pl";
+@@ -212,7 +212,8 @@
+         $bpc->{LogDir} = $Conf{LogDir}  = "$Conf{TopDir}/log"
+                     if ( $Conf{LogDir} eq '' );
+     }
+-    $bpc->{ConfDir} = $Conf{ConfDir} = $confDir;
++    # Disable this as it's not really neccessary for this ebuild
++    # $bpc->{ConfDir} = $Conf{ConfDir} = $confDir;
+     my $err = $bpc->ServerConnect($Conf{ServerHost}, $Conf{ServerPort}, 1);
+     if ( $err eq "" ) {
+         print <<EOF;
+@@ -718,7 +719,7 @@
+     if ( $Conf{CgiDir} =~ m{cgi-bin(/.*)} ) {
+ 	$Conf{CgiURL} = "'http://$Conf{ServerHost}/cgi-bin$1/BackupPC_Admin'";
+     } else {
+-	$Conf{CgiURL} = "'http://$Conf{ServerHost}/cgi-bin/BackupPC_Admin'";
++	$Conf{CgiURL} = "'http://$Conf{ServerHost}/BackupPC_Admin'";
+     }
+ }
+ 
