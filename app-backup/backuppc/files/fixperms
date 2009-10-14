@@ -1,0 +1,19 @@
+Options  +execCGI
+AddHandler cgi-script .cgi
+DirectoryIndex index.cgi
+
+AuthType Basic
+AuthName "BackupPC cgi interface"
+AuthUserFile /etc/BackupPC/authUser
+Require valid-user
+Allow from all 
+
+<Files BackupPC_Admin>
+        Order allow,deny
+        Deny from all
+</Files>
+
+<Files .htaccess>
+        Order allow,deny
+        Deny from all
+</Files>
