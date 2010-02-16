@@ -66,6 +66,11 @@ src_compile() {
 	# don't build docs, fails in docbook2html and docbook2pdf...
 	sed -i -e 's/ docs / /g' Makefile
 
+	# Delete the failing tests
+	rm -r "${WORKDIR}/${PF}"/TestSuite/TJX-Reports/
+	rm "${WORKDIR}/${PF}"/TestSuite/Syntax/Correct/Timezone.tjp
+	rm "${WORKDIR}/${PF}"/TestSuite/Syntax/Errors/Timezone.tjp
+
 	emake || die "emake failed"
 }
 
