@@ -1,0 +1,26 @@
+--- Spin/Xspin5.2/xspin521.tcl	2009-09-07 00:20:10.000000000 +0300
++++ SpinNew/Xspin5.2/xspin521.tcl	2009-11-11 14:10:45.202867113 +0200
+@@ -1,6 +1,6 @@
+-#!/bin/sh
++#!/usr/bin/wish
+ # the next line restarts using wish \
+-exec wish c:/cygwin/bin/xspin -- $*
++#exec wish c:/cygwin/bin/xspin -- $*
+ 
+ # cd	;# enable to cd to home directory by default
+ 
+@@ -6840,12 +6840,8 @@
+ 	set LastCompile $NextCompile
+ 	set NextCompile ""
+ 
+-	if {$Unix} {
+-		set PREFIX "time ./pan -v"
+-	} else {
+-		set PREFIX "pan -v"
+-	}
+-	add_log "$PREFIX $v_options"; update
++	set PREFIX "pan -v"
++	add_log "$PREFIX $v_options" ; update
+ 	if {$havedest != "0"} {
+ 		$havedest insert end "$PREFIX $v_options\n"
+ 		catch { $havedest yview -pickplace end }
