@@ -15,11 +15,14 @@ EGIT_COMMIT="release-${PV}"
 
 LICENSE="bsd"
 SLOT="0"
-KEYWORDS="~amd64"
-IUSE="webui worker client"
+KEYWORDS="~amd64 ~x86"
+IUSE="webui +worker"
 
-DEPEND=""
-RDEPEND="${DEPEND}"
+RDEPEND=">=dev-lang/php-5.3
+         >=dev-php/smarty-3.0
+         >=dev-libs/sihnon-php-lib-0.1
+"
+DEPEND="${RDEPEND}"
 
 src_unpack() {
 
@@ -31,12 +34,8 @@ src_unpack() {
 src_install() {
 
 	insinto "/usr/lib/${PN}"
-	
-	doins -r source
 
-	if use client; then
-		doins -r client
-	fi
+	doins -r source
 
 	if use webui; then
 		doins -r webui
@@ -46,8 +45,9 @@ src_install() {
 		doins -r worker
 	fi
 
-	insinto /etc
-	newins private ripping-cluster
+	dodir /etc/ripping-cluster
+	insinto /etc/ripping-cluster
+	doins private/{config.php,dbconfig.conf}.dist
 
 	newinitd build/ripping-cluster-worker.init-gentoo ripping-cluster-worker
 
