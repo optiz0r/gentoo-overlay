@@ -11,7 +11,7 @@ DESCRIPTION="Distributed ripping cluster manager using HandBrake as a backend"
 HOMEPAGE="http://wiki.sihnon.net/index.php/Ripping-cluster"
 
 EGIT_REPO_URI="https://git.sihnon.net/public/handbrake-cluster-webui.git"
-EGIT_BRANCH="release-${PV}"
+EGIT_COMMIT="release-${PV}"
 
 LICENSE="bsd"
 SLOT="0"
