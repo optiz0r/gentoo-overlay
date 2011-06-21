@@ -22,6 +22,7 @@ RDEPEND=">=dev-lang/php-5.3
          >=dev-php/smarty-3.0
          >=dev-libs/sihnon-php-lib-0.1
 		 >=dev-php/PEAR-Net_Gearman-0.2.3
+		 >=media-video/handbrake-0.9
 "
 DEPEND="${RDEPEND}"
 
@@ -52,18 +53,33 @@ src_install() {
 		doins -r worker
 	fi
 
-	dodir /etc/ripping-cluster
+	keepdir /etc/ripping-cluster
 	insinto /etc/ripping-cluster
 	doins private/{config.php,dbconfig.conf}.dist
 
-	newinitd build/ripping-cluster-worker.init-gentoo ripping-cluster-worker
+	newinitd ${FILESDIR}/ripping-cluster-worker.initd ripping-cluster-worker
+	newconfd ${FILESDIR}/ripping-cluster-worker.confd ripping-cluster-worker
+
+	keepdir /var/log/ripping-cluster
+
+	fowners media /var/log/ripping-cluster
 
 }
 
 pkg_postinst() {
 
 	elog "Please now edit config.php and dbconfig.conf."
+	elog ""
+	elog "This version does not come with database init scripts yet:"
 	elog "You will need to create the database manually with this version"
+	elog ""
+	elog "The daemon will run as the user 'media' by default"
+	elog "Edit /etc/conf.d/ripping-cluster-worker to change this."
+	elog ""
+	elog "Start the daemon with:"
+	elog "  /etc/init.d/ripping-cluster-worker start"
+	elog "Make the daemon start on boot with:"
+	elog "  rc-update add ripping-cluster-worker default"
 
 }
 
