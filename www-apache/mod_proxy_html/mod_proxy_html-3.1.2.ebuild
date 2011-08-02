@@ -7,6 +7,8 @@ inherit apache-module
 DESCRIPTION="An Apache2 module to rewrite links in html pages behind a reverse proxy."
 HOMEPAGE="http://apache.webthing.com/mod_proxy_html/"
 SRC_URI="http://apache.webthing.com/mod_proxy_html/${P}.tar.bz2"
+# Source is not currently available on the gentoo mirrors
+RESTRICT="mirror"
 
 LICENSE="GPL-2"
 SLOT="0"
