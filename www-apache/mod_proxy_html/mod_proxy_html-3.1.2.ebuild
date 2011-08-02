@@ -3,7 +3,6 @@
 # $Header: /var/cvsroot/gentoo-x86/www-apache/mod_proxy_html/mod_proxy_html-3.0.1.ebuild,v 1.1 2009/09/17 08:52:29 hollow Exp $
 
 inherit apache-module
-inherit flag-o-matic
 
 DESCRIPTION="An Apache2 module to rewrite links in html pages behind a reverse proxy."
 HOMEPAGE="http://apache.webthing.com/mod_proxy_html/"
@@ -15,7 +14,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND="app-arch/bzip2
-	dev-libs/libxml2"
+	dev-libs/libxml2
+	>=www-apache/mod_xml2enc-1.0.3"
 RDEPEND="${DEPEND}"
 
 APACHE2_MOD_CONF="27_${PN}"
