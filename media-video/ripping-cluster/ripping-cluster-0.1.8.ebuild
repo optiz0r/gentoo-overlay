@@ -20,7 +20,7 @@ IUSE="webui +worker"
 
 RDEPEND=">=dev-lang/php-5.3
          >=dev-php/smarty-3.0
-         >=dev-libs/sihnon-php-lib-0.1.2
+         >=dev-libs/sihnon-php-lib-0.2
 		 >=dev-php/PEAR-Net_Gearman-0.2.3
 		 >=media-video/handbrake-0.9
 "
