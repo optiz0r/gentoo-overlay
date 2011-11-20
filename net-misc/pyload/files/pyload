@@ -1,0 +1,23 @@
+#!/sbin/runscript
+
+NAME="PyLoad Daemon"
+PIDFILE=/var/run/pyload.pid
+
+depend() {
+	need net
+}
+
+start() {
+	ebegin "Starting PyLoad"
+		start-stop-daemon --start --quiet --background \
+		--pidfile ${PIDFILE} \
+		--exec /usr/bin/env python2 /opt/pyload/pyLoadCore.py --
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping PyLoad"
+		start-stop-daemon --stop --quiet \
+		--pidfile ${PIDFILE}
+	eend $?
+}
