@@ -61,8 +61,10 @@ src_install() {
 	newconfd ${FILESDIR}/ripping-cluster-worker.confd ripping-cluster-worker
 
 	keepdir /var/log/ripping-cluster
-
 	fowners media /var/log/ripping-cluster
+
+	dodir /var/tmp/ripping-cluster/{cache,config,templates}
+	fowners media /var/tmp/ripping-cluster/{cache,config,templates}
 
 }
 
