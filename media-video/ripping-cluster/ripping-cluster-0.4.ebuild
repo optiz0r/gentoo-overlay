@@ -5,22 +5,19 @@
 EAPI=3
 
 inherit eutils
-inherit git
 
 DESCRIPTION="Distributed ripping cluster manager using HandBrake as a backend"
 HOMEPAGE="http://wiki.sihnon.net/index.php/Ripping-cluster"
+SRC_URI="https://github.com/optiz0r/ripping-cluster/tarball/release-${PV} -> ${PN}-${PV}.tar.gz"
 
-EGIT_REPO_URI="https://git.sihnon.net/public/handbrake-cluster-webui.git"
-EGIT_COMMIT="release-${PV}"
-
-LICENSE="bsd"
+LICENSE="CCPL-Attribution-ShareAlike-NonCommercial-3.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="webui +worker"
 
 RDEPEND=">=dev-lang/php-5.3
          >=dev-php/smarty-3.0
-         >=dev-libs/sihnon-php-lib-0.2.5
+         >=dev-libs/sihnon-php-lib-1.1.0
 		 >=dev-php/PEAR-Net_Gearman-0.2.3
 		 >=media-video/handbrake-0.9
 "
@@ -32,36 +29,42 @@ pkg_setup() {
 
 }
 
-src_unpack() {
-
-	git_src_unpack
-	git_branch
-
+src_prepare() {
+	cd "${WORKDIR}"/optiz0r-ripping-cluster-*
+	S=$(pwd)
 }
 
 src_install() {
 
 	insinto "/usr/lib/${PN}"
+	dodir source
 
-	doins -r source
+	insinto "/usr/lib/${PN}/source"
+	doins -r source/lib
 
 	if use webui; then
-		doins -r webui
+		doins -r source/webui
 	fi
 
 	if use worker; then
-		doins -r worker
+		doins -r source/worker
 	fi
+
+	insinto "/usr/share/${PN}"
+	doins -r build/schema
 
 	keepdir /etc/ripping-cluster
 	insinto /etc/ripping-cluster
 	doins private/{config.php,dbconfig.conf}.dist
 
-	newinitd ${FILESDIR}/ripping-cluster-worker.initd ripping-cluster-worker
-	newconfd ${FILESDIR}/ripping-cluster-worker.confd ripping-cluster-worker
+	newinitd build/ripping-cluster-worker.init-gentoo ripping-cluster-worker
+	newconfd build/ripping-cluster-worker.conf-gentoo ripping-cluster-worker
 
 	keepdir /var/log/ripping-cluster
 	fowners media /var/log/ripping-cluster
+
+	keepdir /var/run/ripping-cluster
+	fowners media /var/run/ripping-cluster
 
 	dodir /var/tmp/ripping-cluster/{cache,config,templates}
 	fowners media /var/tmp/ripping-cluster/{cache,config,templates}
@@ -72,8 +75,8 @@ pkg_postinst() {
 
 	elog "Please now edit config.php and dbconfig.conf."
 	elog ""
-	elog "This version does not come with database init scripts yet:"
-	elog "You will need to create the database manually with this version"
+	elog "Database schemas to setup a new install can be found in:"
+	elog "/usr/share/ripping-cluster/schema"
 	elog ""
 	elog "The daemon will run as the user 'media' by default"
 	elog "Edit /etc/conf.d/ripping-cluster-worker to change this."
