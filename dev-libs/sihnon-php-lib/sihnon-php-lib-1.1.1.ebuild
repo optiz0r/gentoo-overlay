@@ -9,6 +9,7 @@ inherit eutils
 DESCRIPTION="Sihnon PHP Framework"
 HOMEPAGE="http://wiki.sihnon.net/index.php/Sihnon-php-lib"
 SRC_URI="https://github.com/optiz0r/sihnon-php-lib/tarball/release-${PV} -> ${PN}-${PV}.tar.gz"
+RESTRICT="mirror"
 
 LICENSE="CCPL-Attribution-ShareAlike-NonCommercial-3.0"
 SLOT="0"

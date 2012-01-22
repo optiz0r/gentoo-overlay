@@ -18,7 +18,7 @@ IUSE="webui +worker"
 
 RDEPEND=">=dev-lang/php-5.3
          >=dev-php/smarty-3.0
-         >=dev-libs/sihnon-php-lib-1.1.0
+         >=dev-libs/sihnon-php-lib-1.1.1
 		 >=dev-libs/sihnon-js-lib-0.1.0
 		 >=dev-php/PEAR-Net_Gearman-0.2.3
 		 >=media-video/handbrake-0.9
