@@ -7,8 +7,9 @@ EAPI=3
 inherit eutils
 
 DESCRIPTION="Distributed ripping cluster manager using HandBrake as a backend"
-HOMEPAGE="http://wiki.sihnon.net/index.php/Ripping-cluster"
+HOMEPAGE="https://benroberts.net/projects/ripping-cluster/"
 SRC_URI="https://github.com/optiz0r/ripping-cluster/tarball/release-${PV} -> ${PN}-${PV}.tar.gz"
+RESTRICT="mirror"
 
 LICENSE="CCPL-Attribution-ShareAlike-NonCommercial-3.0"
 SLOT="0"
@@ -18,6 +19,7 @@ IUSE="webui +worker"
 RDEPEND=">=dev-lang/php-5.3
          >=dev-php/smarty-3.0
          >=dev-libs/sihnon-php-lib-1.1.0
+		 >=dev-libs/sihnon-js-lib-0.1.0
 		 >=dev-php/PEAR-Net_Gearman-0.2.3
 		 >=media-video/handbrake-0.9
 "
@@ -32,33 +34,37 @@ pkg_setup() {
 src_prepare() {
 	cd "${WORKDIR}"/optiz0r-ripping-cluster-*
 	S=$(pwd)
+	rm public/scripts/sihnon-js-lib
 }
 
 src_install() {
 
 	insinto "/usr/lib/${PN}"
-	dodir source
+	dodir "${S}"/source
 
 	insinto "/usr/lib/${PN}/source"
-	doins -r source/lib
+	doins -r "${S}/source/lib"
 
 	if use webui; then
-		doins -r source/webui
+		doins -r "${S}"/source/webui
+
+		insinto "/usr/lib/${PN}/public"
+		doins -r public/*
+		dosym /usr/lib/sihnon-js-lib/public /usr/lib/${PN}/public/scripts/sihnon-js-lib
 	fi
 
 	if use worker; then
-		doins -r source/worker
+		doins -r "${S}"/source/worker
 	fi
 
 	insinto "/usr/share/${PN}"
-	doins -r build/schema
+	doins -r "${S}"/build/schema
+	doins "${S}"/private/{config.php,dbconfig.conf}.dist
 
 	keepdir /etc/ripping-cluster
-	insinto /etc/ripping-cluster
-	doins private/{config.php,dbconfig.conf}.dist
 
-	newinitd build/ripping-cluster-worker.init-gentoo ripping-cluster-worker
-	newconfd build/ripping-cluster-worker.conf-gentoo ripping-cluster-worker
+	newinitd "${S}"/build/ripping-cluster-worker.init-gentoo ripping-cluster-worker
+	newconfd "${S}"/build/ripping-cluster-worker.conf-gentoo ripping-cluster-worker
 
 	keepdir /var/log/ripping-cluster
 	fowners media /var/log/ripping-cluster
