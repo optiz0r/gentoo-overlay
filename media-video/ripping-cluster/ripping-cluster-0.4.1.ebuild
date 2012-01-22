@@ -54,6 +54,7 @@ src_install() {
 	fi
 
 	if use worker; then
+	insinto "/usr/lib/${PN}/source"
 		doins -r "${S}"/source/worker
 	fi
 
