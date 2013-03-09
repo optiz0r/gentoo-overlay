@@ -15,7 +15,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND=""
-RDEPEND="dev-lang/php[gd,pdo,ctype,xml] || ( =dev-lang/php-5.3 )"
+RDEPEND="dev-lang/php[gd,pdo,ctype,xml] || ( >=dev-lang/php-5.3 )"
 
 need_httpd_cgi
 need_php_httpd
