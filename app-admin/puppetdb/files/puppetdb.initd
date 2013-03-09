@@ -1,0 +1,35 @@
+#!/sbin/runscript
+# Copyright 1999-2013 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+start() {
+    ebegin "Starting ${DESC}"
+
+    # We need to do something with the log file...
+    # Move any heap dumps aside
+    if [ -e "/var/log/puppetdb/puppetdb-oom.hprof" ] ; then
+      mv "/var/log/puppetdb/puppetdb-oom.hprof" "/var/log/puppetdb/puppetdb-oom.hprof.prev"
+    fi
+
+    start-stop-daemon --start $EXTRA_ARGS --quiet --pidfile $PIDFILE --chdir $INSTALL_DIR --exec $JAVA_BIN -- -XX:OnOutOfMemoryError="kill -9 %p" $JAVA_ARGS
+
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping ${DESC}"
+
+    start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --exec $JAVA_BIN
+    
+    eend $?
+}
+
+reload() {
+    ebegin "Reloading ${NAME}"
+
+    start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name $NAME
+
+    eend $?
+}
+

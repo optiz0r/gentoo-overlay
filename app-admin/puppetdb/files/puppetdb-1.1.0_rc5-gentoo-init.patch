@@ -1,0 +1,25 @@
+--- puppetdb-1.1.0-rc5/Rakefile.old	2013-01-26 23:25:05.613178490 +0000
++++ puppetdb-1.1.0-rc5/Rakefile	2013-01-26 23:24:34.103164690 +0000
+@@ -231,6 +231,10 @@
+    erb "ext/templates/dev/redhat/redhat_dev_preinst.erb", "ext/files/dev/redhat/redhat_dev_preinst"
+    erb "ext/templates/dev/redhat/redhat_dev_postinst.erb", "ext/files/dev/redhat/redhat_dev_postinst"
+ 
++   # files for gentoo
++   erb "ext/templates/conf_gentoo.erb", "ext/files/puppetdb.gentoo.conf"
++   erb "ext/templates/init_gentoo.erb", "ext/files/puppetdb.gentoo.init"
++
+ end
+ 
+ desc "Install PuppetDB (DESTDIR and PE_BUILD optional arguments)"
+@@ -290,6 +293,11 @@
+     cp_p "ext/files/puppetdb.default", "#{DESTDIR}/etc/default/#{@name}"
+     cp_pr "ext/files/#{@name}.debian.init", "#{DESTDIR}/etc/init.d/#{@name}"
+     chmod 0755, "#{DESTDIR}/etc/init.d/#{@name}"
++  elsif @osfamily == "linux"
++    mkdir_p "#{DESTDIR}/etc/conf.d"
++    cp_p "ext/files/puppetdb.gentoo.conf", "#{DESTDIR}/etc/conf.d/#{@name}"
++    cp_pr "ext/files/#{@name}.gentoo.init", "#{DESTDIR}/etc/init.d/#{@name}"
++    chmod 0755, "#{DESTDIR}/etc/init.d/#{@name}"
+   else
+     raise "Unknown or unsupported osfamily: #{@osfamily}"
+   end
