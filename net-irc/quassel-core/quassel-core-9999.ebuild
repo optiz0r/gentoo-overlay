@@ -4,8 +4,8 @@
 
 EAPI=4
 
-EGIT_REPO_URI="git://gitorious.org/~kode54/quassel/kode54s-quassel.git"
-EGIT_BRANCH="branch_mysql_support"
+EGIT_REPO_URI="https://github.com/aziraphale/quassel"
+EGIT_BRANCH="0.9"
 [[ "${PV}" == "9999" ]] && GIT_ECLASS="git-2"
 
 QT_MINIMAL="4.6.0"
@@ -18,7 +18,7 @@ HOMEPAGE="http://quassel-irc.org/"
 MY_P=${P/-core}
 MY_PN=${PN/-core}
 [[ "${PV}" == "9999" ]] ||
-SRC_URI="http://gitorious.org/quassel/kode54s-quassel/archive-tarball/branch_mysql_support"
+SRC_URI="https://github.com/aziraphale/quassel/archive/0.9.tar.gz"
 
 LICENSE="GPL-3"
 KEYWORDS="~amd64 ~x86"
@@ -30,13 +30,13 @@ SERVER_RDEPEND="
 		app-crypt/qca:2
 		app-crypt/qca-ossl
 	)
-	!postgres? ( >=x11-libs/qt-sql-${QT_MINIMAL}:4[sqlite] dev-db/sqlite[threadsafe,-secure-delete] )
-	postgres? ( >=x11-libs/qt-sql-${QT_MINIMAL}:4[postgres] )
-	>=x11-libs/qt-script-${QT_MINIMAL}:4
+	!postgres? ( >=dev-qt/qtsql-${QT_MINIMAL}:4[sqlite] dev-db/sqlite[-secure-delete] )
+	postgres? ( >=dev-qt/qtsql-${QT_MINIMAL}:4[postgres] )
+	>=dev-qt/qtscript-${QT_MINIMAL}:4
 "
 
 RDEPEND="
-	>=x11-libs/qt-core-${QT_MINIMAL}:4[ssl?]
+	>=dev-qt/qtcore-${QT_MINIMAL}:4[ssl?]
 	${SERVER_RDEPEND}
 	"
 DEPEND="
