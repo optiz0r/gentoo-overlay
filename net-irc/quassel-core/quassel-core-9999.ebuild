@@ -5,7 +5,7 @@
 EAPI=4
 
 EGIT_REPO_URI="https://github.com/aziraphale/quassel"
-EGIT_BRANCH="0.9"
+EGIT_BRANCH="branch_mysql_support"
 [[ "${PV}" == "9999" ]] && GIT_ECLASS="git-2"
 
 QT_MINIMAL="4.6.0"
@@ -18,7 +18,7 @@ HOMEPAGE="http://quassel-irc.org/"
 MY_P=${P/-core}
 MY_PN=${PN/-core}
 [[ "${PV}" == "9999" ]] ||
-SRC_URI="https://github.com/aziraphale/quassel/archive/0.9.tar.gz"
+SRC_URI="https://github.com/aziraphale/quassel/archive/branch_mysql_support.tar.gz"
 
 LICENSE="GPL-3"
 KEYWORDS="~amd64 ~x86"
