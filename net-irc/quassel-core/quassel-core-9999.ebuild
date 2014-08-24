@@ -5,7 +5,7 @@
 EAPI=4
 
 EGIT_REPO_URI="https://github.com/aziraphale/quassel"
-EGIT_BRANCH="branch_mysql_support"
+EGIT_BRANCH="forked/0.10"
 [[ "${PV}" == "9999" ]] && GIT_ECLASS="git-2"
 
 QT_MINIMAL="4.6.0"
