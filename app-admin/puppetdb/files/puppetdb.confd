@@ -1,13 +1,13 @@
-NAME=<%= @name %>
+NAME=puppetdb
 DESC="${NAME} centralized storage daemon"
-JARFILE="<%= @name %>.jar"
+JARFILE="puppetdb.jar"
 PIDFILE=/var/run/$NAME.pid
 
 # Location of your Java binary (version 6 or higher)
 JAVA_BIN="/usr/bin/java"
 
 # Modify this if you'd like to change the memory allocation, enable JMX, etc
-JAVA_ARGS="-Xmx128m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=<%= @heap_dump_path %> "
+JAVA_ARGS="-Xmx128m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/log/puppetdb/puppetdb-oom.hprof "
 
 # These normally shouldn't need to be edited if using OS packages
 USER="puppetdb"

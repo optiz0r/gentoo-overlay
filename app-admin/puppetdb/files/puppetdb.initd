@@ -1,35 +1,42 @@
 #!/sbin/runscript
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+
+PIDFILE="/var/run/puppetdb/puppetdb.pid"
+PUPPETDB_LOG_DIR="/var/log/puppetdb"
+
+extra_started_commands="reload"
+
+command="/usr/bin/java"
+
+command_args="/usr/bin/java -jar /usr/share/puppetdb/puppetdb.jar services -c /etc/puppetdb/conf.d --background"
+#-chuid puppetdb --background --make-pidfile"
+
+depend() {
+	need localmount
+	use syslog
+}
+
+start_pre() {
+	checkpath --directory --owner puppetdb:puppetdb --mode 750 ${PUPPETDB_LOG_DIR}
+}
 
 start() {
-    ebegin "Starting ${DESC}"
-
-    # We need to do something with the log file...
-    # Move any heap dumps aside
-    if [ -e "/var/log/puppetdb/puppetdb-oom.hprof" ] ; then
-      mv "/var/log/puppetdb/puppetdb-oom.hprof" "/var/log/puppetdb/puppetdb-oom.hprof.prev"
-    fi
-
-    start-stop-daemon --start $EXTRA_ARGS --quiet --pidfile $PIDFILE --chdir $INSTALL_DIR --exec $JAVA_BIN -- -XX:OnOutOfMemoryError="kill -9 %p" $JAVA_ARGS
-
-    eend $?
+	ebegin "Starting puppetdb"
+		start-stop-daemon --start \
+		--quiet --background \
+		--pidfile ${PIDFILE} --make-pidfile \
+		--user puppetdb \
+		--exec /usr/bin/java -- -jar /usr/share/puppetdb/puppetdb.jar \
+			services -c \
+			/etc/puppetdb/conf.d
+	eend $?
 }
+		#--quiet --background \
 
 stop() {
-    ebegin "Stopping ${DESC}"
-
-    start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --exec $JAVA_BIN
-    
-    eend $?
+	ebegin "Stopping puppetdb"
+		start-stop-daemon --stop --quiet \
+			--pidfile ${PIDFILE}
+	eend $?
 }
-
-reload() {
-    ebegin "Reloading ${NAME}"
-
-    start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name $NAME
-
-    eend $?
-}
-
