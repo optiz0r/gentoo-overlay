@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<layman>
+    <overlay
+        type    = "git"
+        src     = "https://github.com/optiz0r/gentoo-overlay.git"
+        contact = "me@benroberts.net"
+        status  = "unofficial"
+        name    = "sihnon">
+
+        <link>
+            https://github.com/optiz0r/gentoo-overlay
+        </link>
+
+        <description>
+            Sihnon gentoo portage overlay.
+        </description>
+    </overlay>
+</layman>
