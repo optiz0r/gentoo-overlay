@@ -2,7 +2,8 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-PIDFILE="/var/run/puppetdb/puppetdb.pid"
+PUPPETDB_PID_DIR="${PUPPET_PID_DIR:-/var/run/puppetdb}"
+PIDFILE="${PUPPETDB_PID_DIR}/puppet.pid"
 PUPPETDB_LOG_DIR="/var/log/puppetdb"
 
 extra_started_commands="reload"
@@ -18,6 +19,7 @@ depend() {
 }
 
 start_pre() {
+	checkpath --directory --owner puppetdb:puppetdb "${PUPPETDB_PID_DIR}"
 	checkpath --directory --owner puppetdb:puppetdb --mode 750 ${PUPPETDB_LOG_DIR}
 }
 
@@ -27,9 +29,9 @@ start() {
 		--quiet --background \
 		--pidfile ${PIDFILE} --make-pidfile \
 		--user puppetdb \
-		--exec /usr/bin/java -- -jar /usr/share/puppetdb/puppetdb.jar \
-			services -c \
-			/etc/puppetdb/conf.d
+		--exec /usr/bin/java -- -cp /usr/share/puppetdb/puppetdb.jar clojure.main \
+		        -m com.puppetlabs.puppetdb.core services \
+		        -c /etc/puppetdb/conf.d/
 	eend $?
 }
 		#--quiet --background \
