@@ -21,7 +21,7 @@ IUSE="+terminus"
 DEPEND="${DEPEND}
 	ruby_targets_ruby18? ( dev-lang/ruby:1.8[yaml] ) 
 	ruby_targets_ruby19? ( dev-lang/ruby:1.9[yaml] ) 
-	ruby_targets_ruby20? ( dev-lang/ruby:2.0[yaml] ) 
+	ruby_targets_ruby20? ( dev-lang/ruby:2.0 ) 
 	dev-lang/leiningen
 	dev-ruby/rake
 	>=dev-ruby/facter-1.6.2
@@ -30,7 +30,7 @@ DEPEND="${DEPEND}
 RDEPEND="${RDEPEND}
 	ruby_targets_ruby18? ( dev-lang/ruby:1.8[yaml] ) 
 	ruby_targets_ruby19? ( dev-lang/ruby:1.9[yaml] ) 
-	ruby_targets_ruby20? ( dev-lang/ruby:2.0[yaml] ) 
+	ruby_targets_ruby20? ( dev-lang/ruby:2.0 ) 
 	dev-ruby/rake
 	>=dev-ruby/facter-1.6.2
 	dev-java/java-config
