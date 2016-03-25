@@ -1,21 +1,20 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header:
-
 EAPI=2
 
 inherit webapp depend.php
 
 DESCRIPTION="Piwik is a downloadable, open source (GPL licensed) real time web analytics software program."
 HOMEPAGE="http://www.piwik.org/"
-SRC_URI="http://builds.piwik.org/piwik-${PV}.tar.gz"
+SRC_URI="http://builds.piwik.org/piwik-${PV}.zip"
 
 LICENSE="GPL-3"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND=""
-RDEPEND="dev-lang/php[gd,pdo,ctype,xml] || ( >=dev-lang/php-5.3 )"
+RDEPEND="dev-lang/php[pdo,ctype,xml] || ( <dev-lang/php-5.3[spl,reflection] >=dev-lang/php-5.3 )"
 
 need_httpd_cgi
 need_php_httpd
