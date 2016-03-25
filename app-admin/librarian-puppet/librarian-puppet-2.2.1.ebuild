@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/dev-ruby/ipaddress/ipaddress-0.8.0.ebuild,v 1.2 2012/08/13 22:01:07 flameeyes Exp $
 
 EAPI=4
-USE_RUBY="ruby18 ruby19 ree18 jruby"
+USE_RUBY="ruby18 ruby19 ree18 jruby ruby20 ruby21"
 
 inherit ruby-fakegem
 
@@ -15,6 +15,6 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-ruby_add_rdepend "app-admin/librarian
+ruby_add_rdepend "app-admin/librarianp
 				  dev-ruby/rsync"
 

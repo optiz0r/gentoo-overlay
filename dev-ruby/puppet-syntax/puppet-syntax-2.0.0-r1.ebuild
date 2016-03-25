@@ -4,7 +4,7 @@
 
 EAPI=5
 
-USE_RUBY="ruby18 ruby19"
+USE_RUBY="ruby18 ruby19 ruby20 ruby21"
 
 RUBY_FAKEGEM_TASK_TEST="none"
 RUBY_FAKEGEM_TASK_DOC=""
@@ -20,7 +20,7 @@ HOMEPAGE="https://github.com/gds-operations/puppet-syntax"
 LICENSE="|| ( Ruby GPL-2 )"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~x64-macos ~x86-macos"
-RDEPEND="app-admin/puppet"
+RDEPEND="|| ( app-admin/puppet app-admin/puppet-agent )"
 DEPEND="${RDEPEND}
 dev-ruby/rspec
 dev-ruby/rake"
