@@ -7,7 +7,7 @@ EAPI="3"
 DESCRIPTION="MCollective plug-in that manages the puppet agent daemon."
 HOMEPAGE="https://github.com/puppetlabs/mcollective-puppet-agent"
 SRC_URI="https://github.com/puppetlabs/mcollective-puppet-agent/archive/${PV}.tar.gz"
-RESTRICT="primaryuri"
+#RESTRICT="primaryuri"
 
 LICENSE="GPL-3"
 SLOT="0"
