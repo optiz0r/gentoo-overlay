@@ -19,8 +19,8 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="app-admin/librarian-puppet
-		 app-admin/mcollective
-         dev-vcs/git"
+		|| ( app-admin/mcollective app-admin/puppet-agent )
+		dev-vcs/git"
 
 src_install() {
 	# Remove these spec/ files as they will collide with other packages.
