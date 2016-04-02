@@ -4,23 +4,22 @@
 
 EAPI=5
 
-USE_RUBY="ruby18 ruby19"
+USE_RUBY="ruby18 ruby19 ruby21"
 
 RUBY_FAKEGEM_TASK_TEST="none"
 RUBY_FAKEGEM_TASK_DOC=""
 
-RUBY_FAKEGEM_EXTRADOC="README.markdown CHANGELOG"
-RUBY_FAKEGEM_EXTRAINSTALL="README.markdown CHANGELOG"
+RUBY_FAKEGEM_EXTRADOC="README.md"
+RUBY_FAKEGEM_EXTRAINSTALL="README.md"
 
 inherit ruby-fakegem
 
-DESCRIPTION="Provides a testing harness for puppet modules"
-HOMEPAGE="https://github.com/puppetlabs/puppetlabs_spec_helper"
+DESCRIPTION="Provides a testing harness for puppet functions, templates and hieradata"
+HOMEPAGE="https://github.com/Accuity/rspec-puppet-utils"
 
 LICENSE="|| ( Ruby GPL-2 )"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~x64-macos ~x86-macos"
-RDEPEND="app-admin/puppet
-dev-ruby/puppet-syntax"
+RDEPEND="|| ( app-admin/puppet-agent app-admin/puppet )"
 DEPEND="${RDEPEND}
 dev-ruby/rspec"

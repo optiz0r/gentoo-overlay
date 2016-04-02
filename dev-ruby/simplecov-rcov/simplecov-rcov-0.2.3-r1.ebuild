@@ -4,7 +4,7 @@
 
 EAPI=5
 
-USE_RUBY="ruby18 ruby19 ruby20"
+USE_RUBY="ruby18 ruby19 ruby20 ruby21"
 
 RUBY_FAKEGEM_TASK_TEST="none"
 RUBY_FAKEGEM_TASK_DOC=""
@@ -17,7 +17,7 @@ inherit ruby-fakegem
 DESCRIPTION="Rcov style formatter for SimpleCov"
 HOMEPAGE="https://github.com/fguillen/simplecov-rcov"
 
-LICENSE="|| ( Ruby GPL-2 )"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~x64-macos ~x86-macos"
 RDEPEND="dev-ruby/simplecov"
