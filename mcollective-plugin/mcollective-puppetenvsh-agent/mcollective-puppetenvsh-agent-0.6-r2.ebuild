@@ -19,7 +19,7 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="app-admin/librarian-puppet
-		|| ( app-admin/mcollective app-admin/puppet-agent )
+		|| ( app-admin/puppet-agent app-admin/mcollective )
 		dev-vcs/git"
 
 src_install() {
