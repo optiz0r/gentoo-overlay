@@ -1,0 +1,34 @@
+#!/sbin/runscript
+# Copyright 1999-2010 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+NAME=eyefiserver
+BINARY=/usr/bin/${NAME}
+PIDFILE=/var/run/${NAME}.pid
+
+depend() {
+	need net
+	use logger
+}
+
+start() {
+	ebegin "Starting Eye-Fi Server"
+	start-stop-daemon \
+		--start \
+		--make-pidfile \
+		--pidfile $PIDFILE \
+		--background \
+		--name $NAME \
+		--exec $BINARY
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping Eye-Fi Server"
+	start-stop-daemon \
+		--stop \
+		--signal 15 \
+		--pidfile $PIDFILE
+	eend $?
+}
