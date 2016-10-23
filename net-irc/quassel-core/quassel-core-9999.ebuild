@@ -28,7 +28,6 @@ IUSE="crypt dbus +ssl postgres"
 SERVER_RDEPEND="
 	crypt? (
 		app-crypt/qca:2
-		app-crypt/qca-ossl
 	)
 	!postgres? ( >=dev-qt/qtsql-${QT_MINIMAL}:4[sqlite] dev-db/sqlite[-secure-delete] )
 	postgres? ( >=dev-qt/qtsql-${QT_MINIMAL}:4[postgres] )
