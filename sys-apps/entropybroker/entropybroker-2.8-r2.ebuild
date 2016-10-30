@@ -28,10 +28,6 @@ RDEPEND="${DEPEND}"
 
 S="${WORKDIR}"/eb-${PV}
 
-src_prepare() {
-	epatch "$FILESDIR"/Makefile-${PV}.diff
-}
-
 eb_use() {
 	use ${1} && echo -n ${2}
 }
