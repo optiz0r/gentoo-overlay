@@ -21,7 +21,6 @@ MY_PN=${PN/-core}
 SRC_URI="https://github.com/aziraphale/quassel/archive/branch_mysql_support.tar.gz"
 
 LICENSE="GPL-3"
-KEYWORDS="~amd64 ~x86"
 SLOT="0"
 IUSE="crypt dbus +ssl postgres"
 
