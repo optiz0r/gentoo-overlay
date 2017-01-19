@@ -1,0 +1,30 @@
+diff --git a/configure.ac b/configure.ac
+index 50e41f3..4aa2344 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -44,7 +44,7 @@ AC_TRY_COMPILE([
+ # BIND 9 did the same in its commit 603a78708343f063b44affb882ef93bb19a5142a
+ AC_MSG_CHECKING([for -fno-delete-null-pointer-checks compiler flag])
+ SAVED_CFLAGS="$CFLAGS"
+-CFLAGS="-fno-delete-null-pointer-checks -Werror"
++CFLAGS="-fno-delete-null-pointer-checks"
+ AC_TRY_COMPILE([
+ 	extern int fdef(void);
+ ],[],
+@@ -124,11 +124,11 @@ dnl Older autoconf (2.59, for example) doesn't define docdir
+ [[ ! -n "$docdir" ]] && docdir='${datadir}/doc/${PACKAGE_TARNAME}'
+ AC_SUBST([docdir])
+ 
+-AC_ARG_ENABLE([werror],
+-	AC_HELP_STRING([--disable-werror],
+-		[Disable compilation with -Werror flag]),
+-	[WERROR="$enableval"], [WERROR=yes]
+-)
++#AC_ARG_ENABLE([werror],
++#	AC_HELP_STRING([--disable-werror],
++#		[Disable compilation with -Werror flag]),
++#	[WERROR="$enableval"], [WERROR=yes]
++#)
+ 
+ if test "x$WERROR" = xyes; then
+ 	WERROR=-Werror
