@@ -20,6 +20,6 @@ HOMEPAGE="https://github.com/Accuity/rspec-puppet-utils"
 LICENSE="|| ( Ruby GPL-2 )"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~x64-macos ~x86-macos"
-RDEPEND="|| ( app-admin/puppet-agent app-admin/puppet )"
+RDEPEND="app-admin/puppet-agent"
 DEPEND="${RDEPEND}
 dev-ruby/rspec"
