@@ -2,13 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/dev-python/g-pypi/g-pypi-0.3.ebuild,v 1.4 2013/01/06 19:58:49 mgorny Exp $
 
-EAPI="4"
-PYTHON_DEPEND="2:2.7 3:3.3"
-SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="2.5 3.0 3.1 3.2"
-DISTUTILS_SRC_TEST="nosetests"
+EAPI="6"
+PYTHON_COMPAT=( python{2_6,2_7,3_3} )
 
-inherit distutils eutils
+inherit distutils-r1 eutils
 
 DESCRIPTION="Python library for working with the PuppetDB API"
 HOMEPAGE="https://github.com/puppet-community/pypuppetdb"
@@ -36,18 +33,16 @@ RDEPEND="
 	virtual/python-unittest2
 "
 
-PYTHON_MODNAME="pypuppetdb"
-
 src_prepare() {
-	distutils_src_prepare
+	distutils-r1_src_prepare
 }
 
 src_compile() {
-	distutils_src_compile
+	distutils-r1_src_compile
 	use doc && emake -C docs html
 }
 
 src_install() {
-	distutils_src_install
+	distutils-r1_src_install
 	use doc && dohtml -r docs/build/html/*
 }
