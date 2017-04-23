@@ -56,7 +56,7 @@ pkg_setup() {
 src_prepare() {
 
     epatch "${FILESDIR}/${PN}-${PV}-configure.patch"
-    epatch_user
+    eapply_user
 }
 
 src_configure() {
