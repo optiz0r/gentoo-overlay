@@ -1,0 +1,13 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+    <use>
+        <flag restrict="&gt;media-tv/tvheadend-4.2.0" name="capmt">Enable capmt descrambling support</flag>
+        <flag restrict="&gt;media-tv/tvheadend-4.2.0" name="cwc">Enable cwc descrambling support</flag>
+        <flag restrict="&gt;media-tv/tvheadend-4.2.0" name="dvben50221">Enable hardware CAM CI module support</flag>
+        <flag restrict="&gt;media-tv/tvheadend-4.2.0" name="constcw">Enable constcw descrambling support</flag>
+        <flag restrict="&gt;media-tv/tvheadend-4.2.0" name="dvbcsa">Use the dvbcsa library for descrambling</flag>
+    </use>
+</pkgmetadata>
+
