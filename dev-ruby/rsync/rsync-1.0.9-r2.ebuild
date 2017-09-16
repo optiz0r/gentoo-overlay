@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/dev-ruby/ipaddress/ipaddress-0.8.0.ebuild,v 1.2 2012/08/13 22:01:07 flameeyes Exp $
 
 EAPI=4
-USE_RUBY="ruby18 ruby19 ruby20 ruby21 ree18 jruby"
+USE_RUBY="ruby22 ruby23"
 
 inherit ruby-fakegem
 

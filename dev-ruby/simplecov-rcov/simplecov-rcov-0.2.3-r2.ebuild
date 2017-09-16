@@ -4,23 +4,21 @@
 
 EAPI=5
 
-USE_RUBY="ruby18 ruby19 ruby20 ruby21"
+USE_RUBY="ruby22 ruby23"
 
 RUBY_FAKEGEM_TASK_TEST="none"
 RUBY_FAKEGEM_TASK_DOC=""
 
 RUBY_FAKEGEM_EXTRADOC="README.md"
-RUBY_FAKEGEM_EXTRAINSTALL="README.md"
+RUBY_FAKEGEM_EXTRAINSTALL="README.md views"
 
 inherit ruby-fakegem
 
-DESCRIPTION="Hiera fixtures for puppet-rspec tests."
-HOMEPAGE="https://github.com/bobtfish/hiera-puppet-helper"
+DESCRIPTION="Rcov style formatter for SimpleCov"
+HOMEPAGE="https://github.com/fguillen/simplecov-rcov"
 
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~x64-macos ~x86-macos"
-RDEPEND="|| ( app-admin/puppet-agent app-admin/puppet )
-dev-ruby/puppet-syntax"
-DEPEND="${RDEPEND}
-dev-ruby/rspec"
+RDEPEND="dev-ruby/simplecov"
+DEPEND="${RDEPEND}"

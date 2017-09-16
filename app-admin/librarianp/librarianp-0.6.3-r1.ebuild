@@ -3,15 +3,18 @@
 # $Header: /var/cvsroot/gentoo-x86/dev-ruby/ipaddress/ipaddress-0.8.0.ebuild,v 1.2 2012/08/13 22:01:07 flameeyes Exp $
 
 EAPI=4
-USE_RUBY="ruby18 ruby19 ree18 jruby ruby20 ruby21"
+USE_RUBY="ruby22 ruby23"
+
+RUBY_FAKEGEM_EXTRAINSTALL="VERSION"
 
 inherit ruby-fakegem
 
-DESCRIPTION="Provides POSIX tarchive management from Ruby programs"
-HOMEPAGE="https://github.com/atoulme/minitar"
+DESCRIPTION="A framework for bundlers, used by librarian-puppet"
+HOMEPAGE="https://github.com/carlossg/librarian"
 
-LICENSE="GPL-2+"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
+ruby_add_rdepend "dev-ruby/thor"
