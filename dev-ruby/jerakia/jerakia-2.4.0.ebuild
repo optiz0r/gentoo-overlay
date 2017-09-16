@@ -7,7 +7,7 @@ DESCRIPTION="A pluggable and extendable data lookup system http://jerakia.io"
 HOMEPAGE="https://github.com/crayfishx/jerakia"
 
 DEPEND="
-	|| (app-admin/puppet app-admin/puppet-agent)
+	|| ( app-admin/puppet-agent app-admin/puppet )
 	dev-ruby/rspec
 	dev-ruby/mocha
 	dev-ruby/webmock-rspec-helper
