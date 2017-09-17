@@ -14,3 +14,10 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
+
+all_ruby_install() {
+	all_fakegem_install
+
+	# File collision with dev-ruby/rspec
+	rm ${D}usr/bin/rspec || die
+}
