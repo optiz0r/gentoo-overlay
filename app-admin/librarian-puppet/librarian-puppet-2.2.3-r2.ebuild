@@ -15,6 +15,10 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
+DEPEND="
+	dev-ruby/faraday:0.9
+	dev-ruby/faraday_middleware:0.10"
+
 ruby_add_rdepend "app-admin/librarianp
 				  dev-ruby/rsync"
 
