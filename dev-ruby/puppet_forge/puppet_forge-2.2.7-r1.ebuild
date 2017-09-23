@@ -4,6 +4,7 @@
 
 EAPI=4
 USE_RUBY="ruby22 ruby23"
+RUBY_FAKEGEM_EXTRAINSTALL='locales'
 
 inherit ruby-fakegem
 
