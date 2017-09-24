@@ -7,7 +7,7 @@ USE_RUBY="ruby22 ruby23"
 
 RUBY_FAKEGEM_EXTRAINSTALL="VERSION"
 
-inherit ruby-fakegem
+inherit ruby-fakegem eutils
 
 DESCRIPTION="A framework for bundlers, used by librarian-puppet"
 HOMEPAGE="https://github.com/carlossg/librarian"
@@ -16,5 +16,7 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
+
+RUBY_PATCHES=( "${FILESDIR}/${P}-git-silent.patch" )
 
 ruby_add_rdepend "dev-ruby/thor"
