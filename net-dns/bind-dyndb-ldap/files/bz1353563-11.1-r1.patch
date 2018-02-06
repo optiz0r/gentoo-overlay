@@ -1,0 +1,28 @@
+From 5a7d1347aafefca6040e6aa8fab9eb1f232656ae Mon Sep 17 00:00:00 2001
+From: Tomas Krizek <tkrizek@redhat.com>
+Date: Jul 03 2017 08:00:43 +0000
+Subject: Add empty callback for getsize
+
+
+BIND introduced getsize method in db.h. This is related to
+CVE-2016-6170 and allows to set restriction of zone size limit.
+
+Signed-off-by: Tomas Krizek <tkrizek@redhat.com>
+Reviewed-By: Martin Basti <mbasti@redhat.com>
+
+---
+
+diff --git a/src/ldap_driver.c b/src/ldap_driver.c
+index 53ce1a9..38673b0 100644
+--- a/src/ldap_driver.c
++++ b/src/ldap_driver.c
+@@ -867,7 +867,8 @@ static dns_dbmethods_t ldapdb_methods = {
+ 	findext,
+ 	setcachestats,
+ 	hashsize,
+-	nodefullname
++	nodefullname,
++	NULL, // getsize method not implemented (related BZ1353563)
+ };
+ 
+ isc_result_t ATTR_NONNULLS
