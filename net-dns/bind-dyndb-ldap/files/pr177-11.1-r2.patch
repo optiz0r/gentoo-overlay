@@ -1,0 +1,397 @@
+diff --git a/src/bindcfg.c b/src/bindcfg.c
+index 9b429ba..5539dea 100644
+--- a/src/bindcfg.c
++++ b/src/bindcfg.c
+@@ -6,6 +6,7 @@
+ 
+ #include "config.h"
+ 
++#include <isc/util.h>
+ #include <isccfg/grammar.h>
+ #include <isccfg/namedconf.h>
+ 
+diff --git a/src/fwd.c b/src/fwd.c
+index 840f0e8..f1ab60c 100644
+--- a/src/fwd.c
++++ b/src/fwd.c
+@@ -6,6 +6,8 @@
+ 
+ #include "config.h"
+ 
++#include <isc/boolean.h>
++
+ #include <isccfg/grammar.h>
+ 
+ #include <dns/forward.h>
+diff --git a/src/fwd_register.c b/src/fwd_register.c
+index 355d15f..7cc0c5a 100644
+--- a/src/fwd_register.c
++++ b/src/fwd_register.c
+@@ -3,6 +3,7 @@
+  */
+ 
+ #include <isc/rwlock.h>
++#include <isc/util.h>
+ #include <dns/name.h>
+ 
+ #include "rbt_helper.h"
+diff --git a/src/krb5_helper.c b/src/krb5_helper.c
+index 5466dd8..5d7ee6a 100644
+--- a/src/krb5_helper.c
++++ b/src/krb5_helper.c
+@@ -65,8 +65,8 @@ check_credentials(krb5_context context,
+ 
+ 	krberr = krb5_timeofday(context, &now);
+ 	CHECK_KRB5(context, krberr, "Failed to get timeofday");
+-	log_debug(2, "krb5_timeofday() = %u ; creds.times.endtime = %u",
+-		  now, creds.times.endtime);
++	log_debug(2, "krb5_timeofday() = %ld ; creds.times.endtime = %ld",
++		  (long) now, (long) creds.times.endtime);
+ 
+ 	if (now > (creds.times.endtime - MIN_TIME)) {
+ 		log_debug(2, "Credentials in cache expired");
+diff --git a/src/ldap_driver.c b/src/ldap_driver.c
+index 53ce1a9..38673b0 100644
+--- a/src/ldap_driver.c
++++ b/src/ldap_driver.c
+@@ -867,7 +867,8 @@ static dns_dbmethods_t ldapdb_methods = {
+ 	findext,
+ 	setcachestats,
+ 	hashsize,
+-	nodefullname
++	nodefullname,
++	NULL, // getsize method not implemented (related BZ1353563)
+ };
+ 
+ isc_result_t ATTR_NONNULLS
+diff --git a/src/ldap_entry.c b/src/ldap_entry.c
+index 96a6ef8..00a7e89 100644
+--- a/src/ldap_entry.c
++++ b/src/ldap_entry.c
+@@ -7,6 +7,7 @@
+ #include <dns/ttl.h>
+ #include <dns/types.h>
+ 
++#include <isc/int.h>
+ #include <isc/region.h>
+ #include <isc/types.h>
+ #include <isc/util.h>
+diff --git a/src/ldap_entry.h b/src/ldap_entry.h
+index 6498c79..88b1c42 100644
+--- a/src/ldap_entry.h
++++ b/src/ldap_entry.h
+@@ -6,7 +6,6 @@
+ #define _LD_LDAP_ENTRY_H_
+ 
+ #include <isc/lex.h>
+-#include <isc/util.h>
+ #include <dns/types.h>
+ 
+ #include "fwd_register.h"
+@@ -19,15 +18,15 @@
+ 
+ /* Represents values associated with LDAP attribute */
+ typedef struct ldap_value ldap_value_t;
+-typedef LIST(ldap_value_t) ldap_valuelist_t;
++typedef ISC_LIST(ldap_value_t) ldap_valuelist_t;
+ struct ldap_value {
+         char                    *value;
+-        LINK(ldap_value_t)      link;
++        ISC_LINK(ldap_value_t)      link;
+ };
+ 
+ /* Represents LDAP attribute and it's values */
+ typedef struct ldap_attribute	ldap_attribute_t;
+-typedef LIST(ldap_attribute_t)	ldap_attributelist_t;
++typedef ISC_LIST(ldap_attribute_t)	ldap_attributelist_t;
+ 
+ /* Represents LDAP entry and it's attributes */
+ typedef unsigned char		ldap_entryclass_t;
+@@ -41,7 +40,7 @@ struct ldap_entry {
+ 
+ 	ldap_attribute_t	*lastattr;
+ 	ldap_attributelist_t	attrs;
+-	LINK(ldap_entry_t)	link;
++	ISC_LINK(ldap_entry_t)	link;
+ 
+ 	/* Parsing. */
+ 	isc_lex_t		*lex;
+@@ -59,7 +58,7 @@ struct ldap_attribute {
+ 	char			**ldap_values;
+ 	ldap_value_t		*lastval;
+ 	ldap_valuelist_t	values;
+-	LINK(ldap_attribute_t)	link;
++	ISC_LINK(ldap_attribute_t)	link;
+ };
+ 
+ #define LDAP_ENTRYCLASS_NONE	0x0
+diff --git a/src/ldap_helper.c b/src/ldap_helper.c
+index 1fa0ec9..8b486ae 100644
+--- a/src/ldap_helper.c
++++ b/src/ldap_helper.c
+@@ -26,6 +26,7 @@
+ 
+ #include <isc/buffer.h>
+ #include <isc/dir.h>
++#include <isc/int.h>
+ #include <isc/mem.h>
+ #include <isc/mutex.h>
+ #include <isc/region.h>
+@@ -3714,6 +3715,7 @@ update_zone(isc_task_t *task, isc_event_t *event)
+ 	mctx = pevent->mctx;
+ 	dns_name_init(&prevname, NULL);
+ 
++	REQUIRE(inst != NULL);
+ 	INSIST(task == inst->task); /* For task-exclusive mode */
+ 
+ 	if (SYNCREPL_DEL(pevent->chgtype)) {
+@@ -3730,12 +3732,11 @@ update_zone(isc_task_t *task, isc_event_t *event)
+ 	}
+ 
+ cleanup:
+-	if (inst != NULL) {
+-		sync_concurr_limit_signal(inst->sctx);
+-		sync_event_signal(inst->sctx, pevent);
+-		if (dns_name_dynamic(&prevname))
+-			dns_name_free(&prevname, inst->mctx);
+-	}
++	sync_concurr_limit_signal(inst->sctx);
++	sync_event_signal(inst->sctx, pevent);
++	if (dns_name_dynamic(&prevname))
++		dns_name_free(&prevname, inst->mctx);
++
+ 	if (result != ISC_R_SUCCESS)
+ 		log_error_r("update_zone (syncrepl) failed for %s. "
+ 			    "Zones can be outdated, run `rndc reload`",
+@@ -3760,14 +3761,14 @@ update_config(isc_task_t * task, isc_event_t *event)
+ 
+ 	mctx = pevent->mctx;
+ 
++	REQUIRE(inst != NULL);
+ 	INSIST(task == inst->task); /* For task-exclusive mode */
+ 	CHECK(ldap_parse_configentry(entry, inst));
+ 
+ cleanup:
+-	if (inst != NULL) {
+-		sync_concurr_limit_signal(inst->sctx);
+-		sync_event_signal(inst->sctx, pevent);
+-	}
++	sync_concurr_limit_signal(inst->sctx);
++	sync_event_signal(inst->sctx, pevent);
++
+ 	if (result != ISC_R_SUCCESS)
+ 		log_error_r("update_config (syncrepl) failed for %s. "
+ 			    "Configuration can be outdated, run `rndc reload`",
+@@ -3790,14 +3791,14 @@ update_serverconfig(isc_task_t * task, isc_event_t *event)
+ 
+ 	mctx = pevent->mctx;
+ 
++	REQUIRE(inst != NULL);
+ 	INSIST(task == inst->task); /* For task-exclusive mode */
+ 	CHECK(ldap_parse_serverconfigentry(entry, inst));
+ 
+ cleanup:
+-	if (inst != NULL) {
+-		sync_concurr_limit_signal(inst->sctx);
+-		sync_event_signal(inst->sctx, pevent);
+-	}
++	sync_concurr_limit_signal(inst->sctx);
++	sync_event_signal(inst->sctx, pevent);
++
+ 	if (result != ISC_R_SUCCESS)
+ 		log_error_r("update_serverconfig (syncrepl) failed for %s. "
+ 			    "Configuration can be outdated, run `rndc reload`",
+@@ -3860,6 +3861,7 @@ update_record(isc_task_t *task, isc_event_t *event)
+ 	dns_name_init(&prevname, NULL);
+ 	dns_name_init(&prevorigin, NULL);
+ 
++	REQUIRE(inst != NULL);
+ 	CHECK(zr_get_zone_ptr(inst->zone_register, &entry->zone_name, &raw, &secure));
+ 	zone_found = ISC_TRUE;
+ 
+@@ -4020,13 +4022,12 @@ cleanup:
+ 			    ldap_entry_logname(entry), pevent->chgtype);
+ 	}
+ 
+-	if (inst != NULL) {
+-		sync_concurr_limit_signal(inst->sctx);
+-		if (dns_name_dynamic(&prevname))
+-			dns_name_free(&prevname, inst->mctx);
+-		if (dns_name_dynamic(&prevorigin))
+-			dns_name_free(&prevorigin, inst->mctx);
+-	}
++	sync_concurr_limit_signal(inst->sctx);
++	if (dns_name_dynamic(&prevname))
++		dns_name_free(&prevname, inst->mctx);
++	if (dns_name_dynamic(&prevorigin))
++		dns_name_free(&prevorigin, inst->mctx);
++
+ 	if (raw != NULL)
+ 		dns_zone_detach(&raw);
+ 	if (secure != NULL)
+@@ -4101,11 +4102,11 @@ syncrepl_update(ldap_instance_t *inst, ldap_entry_t **entryp, int chgtype)
+ 	ldap_entry_t *entry = NULL;
+ 	dns_name_t *zone_name = NULL;
+ 	dns_zone_t *zone_ptr = NULL;
+-	char *dn = NULL;
+ 	isc_taskaction_t action = NULL;
+ 	isc_task_t *task = NULL;
+ 	isc_boolean_t synchronous;
+ 
++	REQUIRE(inst != NULL);
+ 	REQUIRE(entryp != NULL);
+ 	entry = *entryp;
+ 	REQUIRE(entry->class != LDAP_ENTRYCLASS_NONE);
+@@ -4154,7 +4155,7 @@ syncrepl_update(ldap_instance_t *inst, ldap_entry_t **entryp, int chgtype)
+ 	else if ((entry->class & LDAP_ENTRYCLASS_RR) != 0)
+ 		action = update_record;
+ 	else {
+-		log_error("unsupported objectClass: dn '%s'", dn);
++		log_error("unsupported objectClass: dn '%s'", entry->dn);
+ 		result = ISC_R_NOTIMPLEMENTED;
+ 		goto cleanup;
+ 	}
+diff --git a/src/ldap_helper.h b/src/ldap_helper.h
+index 6cfece5..fc21bb3 100644
+--- a/src/ldap_helper.h
++++ b/src/ldap_helper.h
+@@ -7,6 +7,7 @@
+ 
+ #include "types.h"
+ 
++#include <isc/boolean.h>
+ #include <isc/eventclass.h>
+ #include <isc/util.h>
+ #include <isccfg/cfg.h>
+diff --git a/src/mldap.c b/src/mldap.c
+index 143abce..8b90921 100644
+--- a/src/mldap.c
++++ b/src/mldap.c
+@@ -10,6 +10,7 @@
+ #include <uuid/uuid.h>
+ 
+ #include <isc/boolean.h>
++#include <isc/int.h>
+ #include <isc/net.h>
+ #include <isc/refcount.h>
+ #include <isc/result.h>
+@@ -119,13 +120,13 @@ void mldap_cur_generation_bump(mldapdb_t *mldap) {
+  * reference counter value.
+  */
+ STATIC_ASSERT((isc_uint32_t)
+-		(typeof(isc_refcount_current((isc_refcount_t *)0)))
++		(typeof(((isc_refcount_t *)0)->refs))
+ 		-1
+ 	      == 0xFFFFFFFF, \
+ 	      "negative isc_refcount_t cannot be properly shortened to 32 bits");
+ 
+ STATIC_ASSERT((isc_uint32_t)
+-		(typeof(isc_refcount_current((isc_refcount_t *)0)))
++		(typeof(((isc_refcount_t *)0)->refs))
+ 		0x90ABCDEF12345678
+ 	      == 0x12345678, \
+ 	      "positive isc_refcount_t cannot be properly shortened to 32 bits");
+diff --git a/src/rbt_helper.c b/src/rbt_helper.c
+index 2a7e6cb..f610b07 100644
+--- a/src/rbt_helper.c
++++ b/src/rbt_helper.c
+@@ -2,6 +2,7 @@
+  * Copyright (C) 2013-2014  bind-dyndb-ldap authors; see COPYING for license
+  */
+ 
++#include <isc/util.h>
+ #include <dns/rbt.h>
+ 
+ #include "util.h"
+diff --git a/src/settings.c b/src/settings.c
+index 37e6e5c..180f027 100644
+--- a/src/settings.c
++++ b/src/settings.c
+@@ -33,9 +33,7 @@ static const setting_t settings_default[] = {
+ 	{ "uri",			no_default_string		}, /* User have to set this */
+ 	{ "connections",		default_uint(2)			},
+ 	{ "reconnect_interval",		default_uint(60)		},
+-	{ "zone_refresh",		default_string("")		}, /* No longer supported */
+ 	{ "timeout",			default_uint(10)		},
+-	{ "cache_ttl",			default_string("")		}, /* No longer supported */
+ 	{ "timeout",			default_uint(10)		},
+ 	{ "base",	 		no_default_string		}, /* User have to set this */
+ 	{ "auth_method",		default_string("none")		},
+@@ -49,7 +47,6 @@ static const setting_t settings_default[] = {
+ 	{ "sasl_password",		default_string("")		},
+ 	{ "krb5_keytab",		default_string("")		},
+ 	{ "fake_mname",			default_string("")		},
+-	{ "psearch",			default_string("")		}, /* No longer supported */
+ 	{ "ldap_hostname",		default_string("")		},
+ 	{ "sync_ptr",			default_boolean(ISC_FALSE)	},
+ 	{ "dyn_update",			default_boolean(ISC_FALSE)	},
+@@ -60,7 +57,6 @@ static const setting_t settings_default[] = {
+ 	 * SSU table defined by empty string contains no rules =>
+ 	 * dns_ssutable_checkrules() will return deny. */
+ 	{ "update_policy",		default_string("")		},
+-	{ "serial_autoincrement",	default_string("")		},
+ 	{ "verbose_checks",		default_boolean(ISC_FALSE)	},
+ 	{ "directory",			default_string("")		},
+ 	{ "server_id",			default_string("")		},
+@@ -597,8 +593,11 @@ settings_set_fill(const cfg_obj_t *config, settings_set_t *set)
+ 	     setting++) {
+ 		cfg_value = NULL;
+ 		result = cfg_map_get(config, setting->name, &cfg_value);
+-		if (result == ISC_R_NOTFOUND)
+-			continue; /* setting not configured in map */
++		if (result == ISC_R_NOTFOUND) {
++			/* setting not configured in map */
++			result = ISC_R_SUCCESS;
++			continue;
++		}
+ 		else if (result != ISC_R_SUCCESS)
+ 			goto cleanup;
+ 		if (cfg_obj_isstring(cfg_value)) {
+diff --git a/src/settings.h b/src/settings.h
+index 16a1e63..6585d8b 100644
+--- a/src/settings.h
++++ b/src/settings.h
+@@ -6,6 +6,8 @@
+ #define _LD_SETTINGS_H_
+ 
+ #include <isc/types.h>
++#include <isc/boolean.h>
++#include <isc/int.h>
+ 
+ #include <isccfg/grammar.h>
+ 
+diff --git a/src/types.h b/src/types.h
+index 25ef3b9..41ef476 100644
+--- a/src/types.h
++++ b/src/types.h
+@@ -5,7 +5,9 @@
+ #ifndef _LD_TYPES_H_
+ #define _LD_TYPES_H_
+ 
++#include <isc/boolean.h>
+ #include <isc/event.h>
++#include <isc/int.h>
+ #include <isc/refcount.h>
+ #include <dns/name.h>
+ 
+@@ -24,7 +26,7 @@
+  * rdata1 -> rdata2 -> rdata3           rdata4 -> rdata5
+  * next_rdatalist              ->       next_rdatalist  ...
+  */
+-typedef LIST(dns_rdatalist_t) ldapdb_rdatalist_t;
++typedef ISC_LIST(dns_rdatalist_t) ldapdb_rdatalist_t;
+ 
+ typedef struct enum_txt_assoc {
+ 	int		value;
+diff --git a/src/zone.c b/src/zone.c
+index 284136e..b9c9936 100644
+--- a/src/zone.c
++++ b/src/zone.c
+@@ -2,6 +2,7 @@
+  * Copyright (C) 2014-2015  bind-dyndb-ldap authors; see COPYING for license
+  */
+ 
++#include <isc/int.h>
+ #include <isc/types.h>
+ #include <isc/util.h>
+ 
