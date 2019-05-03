@@ -1,0 +1,204 @@
+diff --git a/src/acl.c b/src/acl.c
+index 0d475f0..d3c1a3b 100644
+--- a/src/acl.c
++++ b/src/acl.c
+@@ -105,33 +105,33 @@ get_match_type(const cfg_obj_t *obj, unsigned int *value)
+ 	}
+ 	str = cfg_obj_asstring(obj);
+ 
+-	MATCH("name", DNS_SSUMATCHTYPE_NAME);
+-	MATCH("subdomain", DNS_SSUMATCHTYPE_SUBDOMAIN);
+-	MATCH("zonesub", DNS_SSUMATCHTYPE_SUBDOMAIN);
+-	MATCH("wildcard", DNS_SSUMATCHTYPE_WILDCARD);
+-	MATCH("self", DNS_SSUMATCHTYPE_SELF);
+-#if defined(DNS_SSUMATCHTYPE_SELFSUB) && defined(DNS_SSUMATCHTYPE_SELFWILD)
+-	MATCH("selfsub", DNS_SSUMATCHTYPE_SELFSUB);
+-	MATCH("selfwild", DNS_SSUMATCHTYPE_SELFWILD);
++	MATCH("name", dns_ssumatchtype_name);
++	MATCH("subdomain", dns_ssumatchtype_subdomain);
++	MATCH("zonesub", dns_ssumatchtype_subdomain);
++	MATCH("wildcard", dns_ssumatchtype_wildcard);
++	MATCH("self", dns_ssumatchtype_self);
++#if defined(dns_ssumatchtype_selfsub) && defined(dns_ssumatchtype_selfwild)
++	MATCH("selfsub", dns_ssumatchtype_selfsub);
++	MATCH("selfwild", dns_ssumatchtype_selfwild);
+ #endif
+-#ifdef DNS_SSUMATCHTYPE_SELFMS
+-	MATCH("ms-self", DNS_SSUMATCHTYPE_SELFMS);
++#ifdef dns_ssumatchtype_selfms
++	MATCH("ms-self", dns_ssumatchtype_selfms);
+ #endif
+-#ifdef DNS_SSUMATCHTYPE_SELFKRB5
+-	MATCH("krb5-self", DNS_SSUMATCHTYPE_SELFKRB5);
++#ifdef dns_ssumatchtype_selfkrb5
++	MATCH("krb5-self", dns_ssumatchtype_selfkrb5);
+ #endif
+-#ifdef DNS_SSUMATCHTYPE_SUBDOMAINMS
+-	MATCH("ms-subdomain", DNS_SSUMATCHTYPE_SUBDOMAINMS);
++#ifdef dns_ssumatchtype_subdomainms
++	MATCH("ms-subdomain", dns_ssumatchtype_subdomainms);
+ #endif
+-#ifdef DNS_SSUMATCHTYPE_SUBDOMAINKRB5
+-	MATCH("krb5-subdomain", DNS_SSUMATCHTYPE_SUBDOMAINKRB5);
++#ifdef dns_ssumatchtype_subdomainkrb5
++	MATCH("krb5-subdomain", dns_ssumatchtype_subdomainkrb5);
+ #endif
+-#if defined(DNS_SSUMATCHTYPE_TCPSELF) && defined(DNS_SSUMATCHTYPE_6TO4SELF)
+-	MATCH("tcp-self", DNS_SSUMATCHTYPE_TCPSELF);
+-	MATCH("6to4-self", DNS_SSUMATCHTYPE_6TO4SELF);
++#if defined(dns_ssumatchtype_tcpself) && defined(dns_ssumatchtype_6to4self)
++	MATCH("tcp-self", dns_ssumatchtype_tcpself);
++	MATCH("6to4-self", dns_ssumatchtype_6to4self);
+ #endif
+-#if defined(DNS_SSUMATCHTYPE_EXTERNAL)
+-	MATCH("external", DNS_SSUMATCHTYPE_EXTERNAL);
++#if defined(dns_ssumatchtype_external)
++	MATCH("external", dns_ssumatchtype_external);
+ #endif
+ 
+ 	log_bug("unsupported match type '%s'", str);
+@@ -313,7 +313,7 @@ acl_configure_zone_ssutable(const char *policy_str, dns_zone_t *zone)
+ 		/* Use zone name for 'zonesub' match type */
+ 		result = get_fixed_name(stmt, "name", &fname);
+ 		if (result == ISC_R_NOTFOUND &&
+-		    match_type == DNS_SSUMATCHTYPE_SUBDOMAIN) {
++		    match_type == dns_ssumatchtype_subdomain) {
+ 			dns_fixedname_init(&fname);
+ 			CHECK(dns_name_copy(dns_zone_getorigin(zone),
+ 					    dns_fixedname_name(&fname),
+@@ -324,7 +324,7 @@ acl_configure_zone_ssutable(const char *policy_str, dns_zone_t *zone)
+ 
+ 		CHECK(get_types(mctx, stmt, &types, &n));
+ 
+-		if (match_type == DNS_SSUMATCHTYPE_WILDCARD &&
++		if (match_type == dns_ssumatchtype_wildcard &&
+ 		    !dns_name_iswildcard(dns_fixedname_name(&fname))) {
+ 			char name[DNS_NAME_FORMATSIZE];
+ 			dns_name_format(dns_fixedname_name(&fname), name,
+diff --git a/src/empty_zones.c b/src/empty_zones.c
+index 5e5c73f..80abc54 100644
+--- a/src/empty_zones.c
++++ b/src/empty_zones.c
+@@ -226,7 +226,7 @@ empty_zone_search_stop(empty_zone_search_t *iter) {
+  * @returns @see empty_zone_search_next
+  */
+ isc_result_t
+-empty_zone_search_init(empty_zone_search_t *iter, dns_name_t *qname,
++empty_zone_search_init(empty_zone_search_t *iter, const dns_name_t *qname,
+                        dns_zt_t *ztable) {
+ 	isc_result_t result;
+ 
+@@ -298,7 +298,7 @@ cleanup:
+  *    it failed and user configured policy != only.
+  */
+ isc_result_t
+-empty_zone_handle_conflicts(dns_name_t *name, dns_zt_t *zonetable,
++empty_zone_handle_conflicts(const dns_name_t *name, dns_zt_t *zonetable,
+ 			    isc_boolean_t warn_only)
+ {
+ 	isc_result_t result;
+diff --git a/src/empty_zones.h b/src/empty_zones.h
+index 2712942..6ddcfc2 100644
+--- a/src/empty_zones.h
++++ b/src/empty_zones.h
+@@ -21,11 +21,11 @@ void
+ empty_zone_search_stop(empty_zone_search_t *iter) ATTR_NONNULLS;
+ 
+ isc_result_t
+-empty_zone_search_init(empty_zone_search_t *iter, dns_name_t *qname,
++empty_zone_search_init(empty_zone_search_t *iter, const dns_name_t *qname,
+ 		       dns_zt_t *ztable) ATTR_NONNULLS ATTR_CHECKRESULT;
+ 
+ isc_result_t
+-empty_zone_handle_conflicts(dns_name_t *name, dns_zt_t *zonetable,
++empty_zone_handle_conflicts(const dns_name_t *name, dns_zt_t *zonetable,
+ 			    isc_boolean_t warn_only) ATTR_NONNULLS ATTR_CHECKRESULT;
+ 
+ /* Trigger to execute empty_zone_handle_conflicts() for dns_rootname. */
+diff --git a/src/fwd.c b/src/fwd.c
+index f1ab60c..7deeed2 100644
+--- a/src/fwd.c
++++ b/src/fwd.c
+@@ -496,7 +496,7 @@ cleanup:
+  */
+ isc_result_t
+ fwd_configure_zone(const settings_set_t *set, ldap_instance_t *inst,
+-		   dns_name_t *name)
++		   const dns_name_t *name)
+ {
+ 	isc_result_t result;
+ 	isc_mem_t *mctx = NULL;
+@@ -609,7 +609,7 @@ cleanup:
+ }
+ 
+ isc_result_t
+-fwd_delete_table(dns_view_t *view, dns_name_t *name,
++fwd_delete_table(dns_view_t *view, const dns_name_t *name,
+ 		 const char *msg_obj_type, const char *logname) {
+ 	isc_result_t result;
+ 
+diff --git a/src/fwd.h b/src/fwd.h
+index 8416d95..9567c83 100644
+--- a/src/fwd.h
++++ b/src/fwd.h
+@@ -26,11 +26,11 @@ fwd_parse_ldap(ldap_entry_t *entry, settings_set_t *set)
+ 	       ATTR_NONNULLS ATTR_CHECKRESULT;
+ 
+ isc_result_t
+-fwd_configure_zone(const settings_set_t *set, ldap_instance_t *inst, dns_name_t *name)
++fwd_configure_zone(const settings_set_t *set, ldap_instance_t *inst, const dns_name_t *name)
+ 		   ATTR_NONNULLS ATTR_CHECKRESULT;
+ 
+ isc_result_t
+-fwd_delete_table(dns_view_t *view, dns_name_t *name,
++fwd_delete_table(dns_view_t *view, const dns_name_t *name,
+ 		 const char *msg_obj_type, const char *logname)
+ 		 ATTR_NONNULLS ATTR_CHECKRESULT;
+ 
+diff --git a/src/ldap_driver.c b/src/ldap_driver.c
+index 38673b0..7d6a022 100644
+--- a/src/ldap_driver.c
++++ b/src/ldap_driver.c
+@@ -27,6 +27,7 @@
+ #include <dns/rdataset.h>
+ #include <dns/rdatasetiter.h>
+ #include <dns/rdatatype.h>
++#include <dns/rpz.h>
+ #include <dns/result.h>
+ #include <dns/soa.h>
+ #include <dns/types.h>
+diff --git a/src/zone_register.c b/src/zone_register.c
+index d8525e9..30bd452 100644
+--- a/src/zone_register.c
++++ b/src/zone_register.c
+@@ -342,7 +342,7 @@ delete_zone_info(void *arg1, void *arg2)
+  * @pre Zone registed is locked.
+  */
+ static isc_result_t
+-getzinfo(zone_register_t * const zr, dns_name_t *name, zone_info_t **zinfo) {
++getzinfo(zone_register_t * const zr, const dns_name_t *name, zone_info_t **zinfo) {
+ 	isc_result_t result;
+ 	void *data = NULL;
+ 
+@@ -540,7 +540,7 @@ zr_get_zone_ptr(zone_register_t * const zr, dns_name_t * const name,
+  * 'set'.
+  */
+ isc_result_t
+-zr_get_zone_settings(zone_register_t *zr, dns_name_t *name, settings_set_t **set)
++zr_get_zone_settings(zone_register_t *zr, const dns_name_t *name, settings_set_t **set)
+ {
+ 	isc_result_t result;
+ 	zone_info_t *zinfo = NULL;
+diff --git a/src/zone_register.h b/src/zone_register.h
+index 6004078..876e903 100644
+--- a/src/zone_register.h
++++ b/src/zone_register.h
+@@ -40,7 +40,7 @@ zr_get_zone_ptr(zone_register_t * const zr, dns_name_t * const name,
+ 		ATTR_NONNULL(1,2,3) ATTR_CHECKRESULT;
+ 
+ isc_result_t
+-zr_get_zone_settings(zone_register_t *zr, dns_name_t *name, settings_set_t **set) ATTR_NONNULLS ATTR_CHECKRESULT;
++zr_get_zone_settings(zone_register_t *zr, const dns_name_t *name, settings_set_t **set) ATTR_NONNULLS ATTR_CHECKRESULT;
+ 
+ isc_result_t
+ zr_get_zone_path(isc_mem_t *mctx, settings_set_t *settings,

@@ -21,6 +21,8 @@ src_prepare() {
 	#eapply "${FILESDIR}/bz1353563-11.1-r1.patch"
 	# Fix for compilation against >= 9.11.3
 	eapply "${FILESDIR}/pr177-11.1-r2.patch"
+	# Fix for bind 9.12 compatibility
+	eapply "${FILESDIR}/issue180-bind912-compat.patch"
 
 	eautoreconf
 
