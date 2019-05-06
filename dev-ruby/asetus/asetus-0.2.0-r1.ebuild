@@ -1,5 +1,5 @@
 EAPI=5
-USE_RUBY="ruby22 ruby23"
+USE_RUBY="ruby22 ruby23 ruby24"
 
 inherit ruby-fakegem
 
