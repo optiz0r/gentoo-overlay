@@ -18,7 +18,7 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="app-admin/librarian-puppet
-		|| ( app-admin/choria-bin app-admin/mcollective app-admin/choria-bin )
+		|| ( app-admin/mcollective net-misc/choria-bin )
 		dev-vcs/git"
 
 src_install() {
