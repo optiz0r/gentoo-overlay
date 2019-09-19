@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <maintainer type="person">
+    <email>me@benroberts.net</email>
+    <name>Ben Roberts</name>
+  </maintainer>
+  <upstream>
+    <remote-id type="pypi">puppet-env-manager</remote-id>
+    <remote-id type="github">optiz0r/puppet-env-manager</remote-id>
+  </upstream>
+</pkgmetadata>
