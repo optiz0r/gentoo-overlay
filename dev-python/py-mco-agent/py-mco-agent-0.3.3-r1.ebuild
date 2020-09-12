@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python2_7 python3_6 python3_7 python3_8)
+PYTHON_COMPAT=( python2_7 python3_{6..9} )
 inherit distutils-r1
 
 DESCRIPTION="Library for implementing Mcollective agents in Python"

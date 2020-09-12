@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python2_7 python3_6 )
+PYTHON_COMPAT=( python2_7 python3_{6..9} )
 inherit distutils-r1
 
 DESCRIPTION="Tool for updating puppet environments on puppet masters using librarian-puppet"
