@@ -16,10 +16,10 @@ KEYWORDS="~amd64 ~x86"
 IUSE="test"
 
 DEPEND="
-	>=dev-python/git-python-2.1
-	>=dev-python/lockfile-0.12.2
-	dev-python/pyyaml
-	dev-python/requests
+	>=dev-python/git-python-2.1[${PYTHON_USEDEP}]
+	>=dev-python/lockfile-0.12.2[${PYTHON_USEDEP}]
+	dev-python/pyyaml[${PYTHON_USEDEP}]
+	dev-python/requests[${PYTHON_USEDEP}]
 "
 RDEPEND="${DEPEND}"
 BDEPEND="
