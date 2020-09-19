@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>patrick@gentoo.org</email>
+		<name>Patrick Lauer</name>
+	</maintainer>
+	<maintainer type="person">
+		<email>johu@gentoo.org</email>
+		<name>Johannes Huber</name>
+	</maintainer>
+	<use>
+		<flag name="phonon">
+			Build client with phonon backend support. This enables sound
+			playback in client.
+		</flag>
+		<flag name="snorenotify">
+			Support for snore notification framework.
+		</flag>
+		<flag name="crypt">
+			Support core-&gt;network per-channel and per-query blowfish
+			encryption via <pkg>app-crypt/qca</pkg>.
+		</flag>
+	</use>
+</pkgmetadata>
