@@ -16,6 +16,8 @@ IUSE=""
 DEPEND=">=net-dns/bind-9.11"
 RDEPEND="${DEPEND}"
 
+S="${WORKDIR}/${PN}-v${PV}"
+
 src_prepare() {
 	eautoreconf
 
